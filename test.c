@@ -11,5 +11,16 @@ int32_t main()
 {
     int64_t pos_simd = memchr_simd('S', (int8_t *)data, strlen(data));
 
-    printf("%ld, %c", pos_simd, data[pos_simd]);
+    printf("%ld, %c\n", pos_simd, data[pos_simd]);
+
+    char * seq = "amet";
+    uint64_t seq_len = strlen(seq);
+    int64_t pos_seq_simd = memchr_sequance_simd((int8_t *)seq, (int8_t *) data, seq_len, strlen(data));
+
+    printf("%ld ", pos_seq_simd);
+    for (size_t i = 0; i < seq_len; i++)
+        printf("%c", *(data+pos_seq_simd+i));
+
+    printf("\n");
+    
 }

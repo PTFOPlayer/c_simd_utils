@@ -29,7 +29,6 @@ int64_t memchr_simd(int8_t byte, int8_t *data, uint64_t data_len)
         {
             return a + idx - 1;
         }
-        
 
         idx += 16;
     }
@@ -40,16 +39,39 @@ int64_t memchr_simd(int8_t byte, int8_t *data, uint64_t data_len)
         {
             return idx;
         }
-        else {
+        else
+        {
             return 0;
         }
-        
     }
-    
-
-
 
     return -1;
 }
 
+int64_t memchr_sequance_simd(int8_t *seq, int8_t *data, uint64_t seq_len, uint64_t data_len)
+{
+
+    if (seq_len > data_len)
+        return -1;
+
+    int64_t temporary;
+    int64_t offset = 0;
+    while (temporary = memchr_simd(seq[0], data + offset, data_len - offset))
+    {
+        if (temporary == -1 || ((data_len - offset) < seq_len))
+            return -1;
+
+        int8_t correct = 1;
+        for (size_t i = 1; i < seq_len; i++)
+            if ((data + offset)[temporary + i] != seq[i])
+                correct = 0;
+
+        if (correct)
+            return temporary;
+
+        offset += temporary;
+    }
+
+    return -1;
+}
 #endif
