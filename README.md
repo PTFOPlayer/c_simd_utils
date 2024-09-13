@@ -1,9 +1,10 @@
-# MEMCHR in C using SIMD
+# C SIMD Utils
 
-This is a simple implementation of memchr using SIMD extension.
+Implementation of simple utilities like searching in array using simd
 
 ## Required instruction set:
-* x86 with SSE 4.2 
+* x86 with SSE 4.2 for every _simd function
+* x86 with AVX for every _avx function
 
 ## Valid usecases:
 * searching ascii/ UTF-8 strings with length greater than 16 chars 

@@ -3,11 +3,14 @@
 
 #include <stdint.h>
 #include <emmintrin.h>
+#include <immintrin.h>
 
 typedef __m128i i8x16;
 
 int64_t memchr_simd(int8_t byte, int8_t *data, uint64_t data_len)
 {
+    if (data == NULL)
+        return -2;
 
     i8x16 bytex16 = _mm_set1_epi8(byte);
 
@@ -36,13 +39,8 @@ int64_t memchr_simd(int8_t byte, int8_t *data, uint64_t data_len)
     while (idx < data_len)
     {
         if (data[idx] != byte)
-        {
             return idx;
-        }
-        else
-        {
-            return 0;
-        }
+        idx++;
     }
 
     return -1;
@@ -54,9 +52,12 @@ int64_t memchr_sequance_simd(int8_t *seq, int8_t *data, uint64_t seq_len, uint64
     if (seq_len > data_len)
         return -1;
 
+    if (seq == NULL || data == NULL)
+        return -2;
+
     int64_t temporary;
     int64_t offset = 0;
-    while (temporary = memchr_simd(seq[0], data + offset, data_len - offset))
+    while ((temporary = memchr_simd(seq[0], data + offset, data_len - offset)))
     {
         if (temporary == -1 || ((data_len - offset) < seq_len))
             return -1;
@@ -74,4 +75,5 @@ int64_t memchr_sequance_simd(int8_t *seq, int8_t *data, uint64_t seq_len, uint64
 
     return -1;
 }
+
 #endif
