@@ -165,5 +165,4 @@ int64_t memsearch64_avx(int64_t value, int64_t *data, uint64_t data_len)
     return -1;
 }
 
-
 #endif

@@ -9,3 +9,9 @@ Implementation of simple utilities like searching in array using simd
 ## Valid usecases:
 * searching ascii/ UTF-8 strings with length greater than 16 chars 
 * array of bytes with length greater than 16 and known size
+
+## Compile:
+
+```
+    gcc -mavx -march=haswell -msse4.2 test.c 
+```
