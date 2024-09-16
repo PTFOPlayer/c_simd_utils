@@ -13,5 +13,5 @@ Implementation of simple utilities like searching in array using simd
 ## Compile:
 
 ```
-    gcc -mavx -march=haswell -msse4.2 test.c 
+    gcc test.c -mavx -march=haswell -msse4.2 -Wall -pedantic -Wextra 
 ```

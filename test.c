@@ -17,14 +17,15 @@ void test_memsearch32_avx();
 void test_memsearch64_simd();
 void test_memsearch64_avx();
 void test_sum32_simd();
+void test_sum32_avx();
 void test_sum64_simd();
+void test_sum64_avx();
 
-// pass number as an argument to test given function (0-7)
+// pass number as an argument to test given function (0-9)
 int32_t main(int32_t argc, char *args[])
 {
 
-
-    void (*funcs[8])()  = {
+    void (*funcs[10])() = {
         test_memchr_simd,
         test_memchr_sequance_simd,
         test_memsearch32_simd,
@@ -32,12 +33,13 @@ int32_t main(int32_t argc, char *args[])
         test_memsearch64_simd,
         test_memsearch64_avx,
         test_sum32_simd,
-        test_sum64_simd
-    };
+        test_sum32_avx,
+        test_sum64_simd,
+        test_sum64_avx};
 
     if (argc > 1)
     {
-        funcs[args[1][0] -'0']();
+        funcs[args[1][0] - '0']();
     }
 }
 
@@ -66,7 +68,7 @@ void test_memchr_sequance_simd()
 void test_memsearch32_simd()
 {
     printf("\n\n ~~ TEST memsearch32_simd ~~ \n");
-    int32_t arr[128] = {0};
+    int32_t arr[128]  __attribute__ ((aligned (32))) = {0};
     arr[8] = 1;
     arr[96] = 24;
     printf("%ld, %ld\n",
@@ -77,7 +79,7 @@ void test_memsearch32_simd()
 void test_memsearch32_avx()
 {
     printf("\n\n ~~ TEST memsearch32_avx ~~ \n");
-    int32_t arr[128] = {0};
+    int32_t arr[128]  __attribute__ ((aligned (32))) = {0};
 
     uint32_t addr1 = 15;
     uint32_t addr2 = 127;
@@ -96,7 +98,7 @@ void test_memsearch64_simd()
 {
 
     printf("\n\n ~~ TEST memsearch64_simd ~~ \n");
-    int64_t arr[128] = {0};
+    int64_t arr[128]  __attribute__ ((aligned (64))) = {0};
     arr[8] = 1;
     arr[96] = 24;
     printf("%ld, %ld\n",
@@ -107,7 +109,7 @@ void test_memsearch64_simd()
 void test_memsearch64_avx()
 {
     printf("\n\n ~~ TEST memsearch64_avx ~~ \n");
-    int64_t arr[128] = {0};
+    int64_t arr[128] __attribute__ ((aligned (64))) = {0};
 
     uint32_t addr1 = 15;
     uint32_t addr2 = 127;
@@ -122,16 +124,64 @@ void test_memsearch64_avx()
            memsearch64_avx(val2, arr, 128), addr2);
 }
 
-void test_sum32_simd() {
-    int32_t arr[16] = {1,1,1,1,2,2,2,2,4,4,4,4,8,8,8,8};
+void test_sum32_simd()
+{
+    int32_t arr[32] __attribute__ ((aligned (32))) = {
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8,
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8};
 
-    int32_t result = sum32_simd(arr, &arr[16]);
+    int32_t result = sum32_simd(arr, &arr[32]);
     printf("%d", result);
 }
 
-void test_sum64_simd() {
-    int64_t arr[16] = {1,1,1,1,2,2,2,2,4,4,4,4,8,8,8,8};
+void test_sum32_avx()
+{
+    int32_t arr[32] __attribute__ ((aligned (32))) = {
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8,
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8};
 
-    int64_t result = sum64_simd(arr, &arr[16]);
+    int32_t result = sum32_avx(arr, &arr[32]);
+    printf("%d", result);
+}
+
+void test_sum64_simd()
+{
+    int64_t arr[32] __attribute__ ((aligned (64))) = {
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8,
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8};
+    int64_t result = sum64_simd(arr, &arr[32]);
+    printf("%ld", result);
+}
+
+void test_sum64_avx()
+{
+    int64_t arr[32] __attribute__ ((aligned (64))) = {
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8,
+        1, 1, 1, 1,
+        2, 2, 2, 2,
+        4, 4, 4, 4,
+        8, 8, 8, 8};
+    int64_t result = sum64_avx(arr, &arr[32]);
     printf("%ld", result);
 }
